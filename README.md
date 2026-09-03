@@ -138,6 +138,32 @@ in the middle of it.
 `alert.html` is still there, and still centres its content under a title, for a
 page no translator touches.
 
+### Opening an image
+
+An image the content column has to shrink is clickable, and opens at its full
+size in a viewer: dark backdrop, the alt text as a caption, and — when a page has
+several — a counter, arrows and the left and right keys. Escape closes it, so
+does a click outside, and focus returns to the image it came from.
+
+Nothing is written in the Markdown to ask for any of it. A page Weblate rewrites
+can carry no Liquid tag and no kramdown attribute list, so the whole decision is
+made from the rendered image: `#content` images that are **not already a link** —
+which keeps the download badges out — and whose natural width exceeds the width
+they are given. That is the automatic equivalent of the `:scale:` the Sphinx
+manual relies on, and it covers the images the manual leaves out, since docutils
+only makes the scaled ones clickable.
+
+The caption costs nothing: the alt text is already a translated string. Only the
+viewer's own controls needed strings — `t_img_close`, `t_img_prev`, `t_img_next`
+and `t_img_counter`, whose `%s` are substituted after translation.
+
+The viewer is a `<dialog>`: `showModal()` brings Escape, the focus trap and the
+top layer with it, which is also what keeps it clear of the mobile menu's
+`z-index`. Without JavaScript the images stay images, exactly as they were.
+
+Not reproduced from the manual's fancyBox: pinch-zoom and panning. The picture is
+contained in the viewport, which on a normal screen is already close to 1:1.
+
 ### The menu
 
 The menu lives in the sidebar, exactly as on galette.eu, and folds into an
@@ -211,6 +237,27 @@ Local preview reproduces the GitHub Pages toolchain through the `github-pages`
 gem (Jekyll 3.9, jekyll-sass-converter 1.5, Ruby Sass 3). That toolchain is why
 everything under `_sass/` uses `@import` and not `@use`: `@use` builds fine on a
 modern Sass and then fails on GitHub Pages.
+
+**On Ruby 3.2 and later that build fails**, and the failure has nothing to do
+with the theme: the `liquid` 4.0.3 that `github-pages` pins calls `tainted?`,
+which Ruby removed. Restore it for the run rather than reaching for a newer
+Jekyll:
+
+```bash
+echo 'class Object; def tainted?; false; end; def untaint; self; end; end' > /tmp/untaint.rb
+RUBYOPT="-r/tmp/untaint.rb" bundle exec jekyll build
+```
+
+`jekyll serve` needs `--no-watch` on top of that:  the preview does not refresh
+itself — rebuild after an edit, since a stale preview is indistinguishable 
+from a change that did not take.
+
+Worth the detour, because a newer Jekyll is **not** a stand-in. It loads none of
+the plugins `github-pages` brings, and one of them rewrites what the pages
+contain: `jekyll-relative-links` turns `![alt](images/x.png)` into a
+baseurl-aware absolute path, which is what puts a consuming site's images under
+`/plugin-maps/`. A CI assertion written against a plain Jekyll build once passed
+locally and failed on Pages for exactly that reason.
 
 Asset URLs in the SCSS are relative to the compiled stylesheet
 (`../images/bg.png`, not `/site/assets/images/bg.png` as on galette.eu), so the

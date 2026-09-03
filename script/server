@@ -1,7 +1,23 @@
 #!/bin/sh
-# Serve the demo site locally. `jekyll serve` may fail on very recent Rubies —
-# the github-pages gem pins old dependencies — in which case build and serve the
-# output with any static server:
-#   bundle exec jekyll build && python3 -m http.server -d _site
+# Serve the demo site locally, on the toolchain GitHub Pages actually uses.
+#
+# On Ruby 3.2 and later that toolchain cannot start on its own: the liquid 4.0.3
+# the github-pages gem pins calls `tainted?`, which Ruby removed. Giving it back
+# for the duration of the run is enough, and is far better than building with a
+# newer Jekyll — that one loads none of the plugins github-pages brings, and
+# jekyll-relative-links among them changes what the pages contain.
+#
+# And watching is broken here too, further down the same chain: pathutil 0.16.2
+# calls IO.read with a Hash where Ruby now wants an Integer, so the serve dies on
+# the first scan. Pass --no-watch (or --detach) and rebuild by hand after an
+# edit — a stale preview looks exactly like a change that did not work, which is
+# a good way to lose a review round.
 set -e
+
+shim="${TMPDIR:-/tmp}/jekyll-untaint.rb"
+if ! ruby -e 'Object.new.tainted?' >/dev/null 2>&1; then
+  printf '%s\n' 'class Object; def tainted?; false; end; def untaint; self; end; end' > "$shim"
+  export RUBYOPT="-r${shim} ${RUBYOPT:-}"
+fi
+
 bundle exec jekyll serve "$@"
