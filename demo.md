@@ -110,7 +110,9 @@ between — arrows, a counter, and the arrow keys.
 
 ![A screenshot wider than the column that holds it](assets/images/og_image.jpg)
 
-![The very same file, so the viewer has somewhere to go](assets/images/og_image.jpg)
+![A screenshot of Galette Dashboard](assets/screenshots/screenshot_1.png)
+
+![A screenshot of Galette Preferences](assets/screenshots/screenshot_2.png)
 
 The caption in the viewer is the alt text, which Weblate already translates. An
 image small enough to be shown whole gains nothing from a viewer, so it is left
