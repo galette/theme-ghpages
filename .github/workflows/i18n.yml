@@ -18,6 +18,8 @@ on:
 
 permissions:
   contents: write
+  # to dispatch Rebuild consuming sites, once something has been committed
+  actions: write
 
 concurrency:
   group: i18n-${{ github.ref }}
@@ -40,6 +42,8 @@ jobs:
         run: ./bin/build-i18n
 
       - name: Commit if the output changed
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- _includes/i18n.html _includes/lang-name.html; then
             echo "The includes already match i18n/strings/*.yml, nothing to commit."
@@ -54,3 +58,10 @@ jobs:
           # matches, and a GITHUB_TOKEN push does not start workflows anyway —
           # so it cannot loop.
           git push
+
+          # Reached only when something was committed. The sites need that include
+          # and a GITHUB_TOKEN push starts no workflow, so the rebuild is asked for
+          # from here rather than by chaining off this run: chaining fired even when
+          # nothing had changed, and every site then got a second Pages build that
+          # Pages itself cancelled.
+          gh workflow run rebuild-consumers.yml

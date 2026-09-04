@@ -18,12 +18,12 @@ on:
       - 'assets/**'
   # Regenerate i18n and Refresh the Galette version both commit _includes/ with
   # GITHUB_TOKEN, and such a push starts no workflow — so the push trigger above
-  # never sees a translation update, nor a new Galette release. Chaining off
-  # those runs is what carries new strings, and a changed compatibility verdict,
-  # to the sites.
-  workflow_run:
-    workflows: ['Regenerate i18n', 'Refresh the Galette version']
-    types: [completed]
+  # never sees a translation update, nor a new Galette release. Each of them
+  # dispatches this workflow itself, immediately after its own push, so a rebuild
+  # is asked for exactly when a commit was made. Chaining off their runs instead
+  # fired whatever they did: a push touching an asset and a string at once then
+  # produced two rebuilds, and every site a second Pages build that Pages
+  # cancelled as redundant.
   workflow_dispatch:
     inputs:
       dry_run:
@@ -39,8 +39,6 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     name: Ask Pages to rebuild each consuming site
-    # workflow_run fires whatever the outcome, including a failed regeneration.
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
     steps:
       - uses: actions/checkout@v5
