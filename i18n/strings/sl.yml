@@ -18,3 +18,12 @@ t_galette_website: Spletna stran Galette
 t_galette_doc: Dokumentacija Galette
 t_latest: najnovejša
 t_languages: Jeziki
+t_compat_galette: Združljiva Galette %s
+t_compat_outdated: Ta vtičnik ni združljiv z najnovejšo različico Galette (%s).
+t_adm_note: Opomba
+t_adm_warning: Opozorilo
+t_img_close: Zapri sliko
+t_img_prev: Prejšnja slika
+t_img_next: Naslednja slika
+t_img_counter: Slika %s od %s
+t_adm_todo: Todo
