@@ -5,8 +5,8 @@ t_nav_source: Code source
 t_maint_core: Maintenu par l’équipe Galette
 t_maint_community: Plugin communautaire
 t_maint_core_footer: Ce plugin est développé et maintenu par l’équipe Galette.
-t_maint_community_footer: Ce plugin est développé et maintenu par un membre de la
-  communauté.
+t_maint_community_footer: Ce plugin est développé et maintenu par un membre de 
+  la communauté.
 t_contact: Restons en contact
 t_code_license: Code sous GPLv3
 t_content_license: Contenus sous CC BY-SA 4.0
@@ -22,3 +22,10 @@ t_languages: Langues
 t_adm_note: Note
 t_adm_warning: Avertissement
 t_adm_todo: À faire
+t_compat_galette: Compatible Galette %s
+t_compat_outdated: Ce plugin n'est pas compatible avec la dernière version de 
+  Galette (%).
+t_img_close: Fermer l'image
+t_img_prev: Image précédente
+t_img_next: Image suivante
+t_img_counter: Image %s de %s
