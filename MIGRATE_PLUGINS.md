@@ -45,7 +45,7 @@ Every line here cost a round trip on fullcard, oauth2 or auto.
 |---|---|---|
 | 1 | GitHub issues are **disabled** on five of the six, so `tracker_url` is required and `/issues` must not be linked — but they are **enabled on activities**, which is where its bugs go | check `has_issues` per repository |
 | 2 | Adding front matter to `README.md` turns it into `README.html` and the site **loses its root** — GitHub Pages only renders it as the index while it has none | oauth2, reverted |
-| 3 | A version written into a page becomes a string every translator carries and re-bumps at each release | the two shields badges in each `.rst` |
+| 3 | A version written into a page becomes a string every translator carries and re-bumps at each release | the two shields badges in each `.rst`; the theme draws its own from `releases/latest` |
 | 4 | A catalogue may have translated a **real path** — Tamil had translated the `plugins` directory name | review every generated translation |
 | 5 | `lang: en` in `defaults` overrides the derived language on **every** page, translated ones included | theme, fullcard, oauth2 |
 | 6 | `fr` and `fr_FR` are duplicate locale directories in the documentation repository | publish `fr` only |
@@ -324,9 +324,19 @@ The Sphinx page stays where it is; its content is **carried over**, not moved.
 `source/changelogs/galette_07.rst` links `:doc:`plugin Auto </plugins/auto>``, so
 deleting the page would break the changelog build.
 
-* **Drop the two shields badges.** They hold the version in their URL, which
-  would put it inside a translated string in every language. The theme's
-  cartouche is the download UI.
+* **Keep the two download links, drop the badges around them.** Two plain
+  bullets, to `releases/latest` and to `releases/tag/nightly`, and nothing else
+  in the list:
+
+  ```markdown
+  * [Get latest Auto plugin!](https://github.com/galette-plugins/plugin-auto/releases/latest)
+  * [Get Auto plugin nightly build!](https://github.com/galette-plugins/plugin-auto/releases/tag/nightly)
+  ```
+
+  The theme draws them as the badges galette.eu puts in a release post, with the
+  version read from `releases/latest`. What the `.rst` badges did wrong was hold
+  that version in their URL, inside a translated string in every language — not
+  the badge itself.
 * **Rewrite the cross-reference.** `:ref:`… <plugins_managment>`` points at a
   label in the manual; on the site it becomes a link to
   `https://doc.galette.eu/en/master/plugins/index.html#plugins-managment`.

@@ -1,81 +1,10 @@
 {%- comment -%}
 The orange cartouche galette.eu carries in its header, pointing at wherever the
-plugin's archives actually live. Both URLs are configurable, and the whole box
-disappears when a site declares neither.
-
-  plugin:
-    name: Fullcard                    # optional, defaults to site.title
-    archive: galette-plugin-fullcard  # names the tarball, on either host
-    version: "2.2.1"                  # only while the plugin is published by hand
-    release_url: …                    # overrides the derived stable URL
-    nightly_url: …                    # overrides the derived nightly URL
-
-A plugin whose releases are built by GitHub Actions declares no version: the
-number comes from the latest release, and nothing has to be bumped here at each
-release. `version` means "this plugin is still published by hand on galette.eu",
-and takes both URLs back there.
-
-site.github.latest_release is the /releases/latest endpoint, which skips drafts
-and prereleases — so the rolling `nightly` prerelease never becomes the number
-shown as stable.
+plugin's archives actually live. The whole box disappears when a site declares
+neither URL; download-urls.html is where they, and the compatibility verdict,
+are derived.
 {%- endcomment -%}
-{%- assign dl_name = site.plugin.name | default: site.title | default: site.github.repository_name -%}
-{%- assign dl_base = site.galette_download_url | default: 'https://galette.eu/download/plugins' -%}
-{%- assign dl_version = site.plugin.version -%}
-{%- assign release_url = site.plugin.release_url -%}
-{%- if release_url == nil and site.plugin.archive and site.plugin.version -%}
-  {%- capture release_url -%}{{ dl_base }}/{{ site.plugin.archive }}-{{ site.plugin.version }}.tar.bz2{%- endcapture -%}
-{%- endif -%}
-{%- comment -%}
-  releases_url ends in /releases, so /download/<tag>/<file> is the asset itself
-  rather than the page listing it.
-{%- endcomment -%}
-{%- if release_url == nil and site.github.latest_release.tag_name -%}
-  {%- assign dl_tag = site.github.latest_release.tag_name -%}
-  {%- assign dl_version = dl_tag -%}
-  {%- if site.plugin.archive and site.github.releases_url -%}
-    {%- capture release_url -%}{{ site.github.releases_url }}/download/{{ dl_tag }}/{{ site.plugin.archive }}-{{ dl_tag }}.tar.bz2{%- endcapture -%}
-  {%- else -%}
-    {%- assign release_url = site.github.latest_release.html_url -%}
-  {%- endif -%}
-{%- endif -%}
-{%- comment -%}
-  On GitHub the useful stable target is /releases/latest — it redirects to the
-  current release — not /releases, which is the whole list.
-{%- endcomment -%}
-{%- if release_url == nil and site.github.releases_url -%}
-  {%- capture release_url -%}{{ site.github.releases_url }}/latest{%- endcapture -%}
-{%- endif -%}
-{%- assign nightly_url = site.plugin.nightly_url -%}
-{%- if nightly_url == nil and site.plugin.archive -%}
-  {%- if site.plugin.version -%}
-    {%- capture nightly_url -%}{{ dl_base }}/{{ site.plugin.archive }}-dev.tar.bz2{%- endcapture -%}
-  {%- elsif site.github.releases_url -%}
-    {%- capture nightly_url -%}{{ site.github.releases_url }}/download/nightly/{{ site.plugin.archive }}-dev.tar.bz2{%- endcapture -%}
-  {%- endif -%}
-{%- endif -%}
-{%- comment -%}
-What the stable download declares about Galette: `compver` in the plugin's
-_define.php at that release's tag, copied onto this branch as _data/galette.yml
-by galette/.github/actions/release-plugin. It is used only when it describes the
-release named above — a release published by hand writes no such file, and the
-number would otherwise belong to a different one.
-
-A verdict is only ever given on a value that was read and compared by machine.
-`plugin.min_galette`, kept by hand in _config.yml, is still honoured for a plugin
-with no release workflow yet, but it carries no rank and so gets no colour: an
-unverified number is shown, not judged.
-
-The nightly link never gets a verdict either. It targets whichever generation
-`develop` currently declares, against a Galette nightly nothing tracks — a
-nightly requires a nightly.
-{%- endcomment -%}
-{%- assign compat_label = site.plugin.min_galette -%}
-{%- assign compat_rank = nil -%}
-{%- if site.data.galette.release == dl_version and site.data.galette.series -%}
-  {%- assign compat_label = site.data.galette.series -%}
-  {%- assign compat_rank = site.data.galette.rank -%}
-{%- endif -%}
+{%- include download-urls.html -%}
 {%- if release_url or nightly_url -%}
 <aside id="galette" aria-label="{{ t_nav_download }}">
   <ul>

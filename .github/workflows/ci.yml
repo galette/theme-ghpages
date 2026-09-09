@@ -137,6 +137,34 @@ jobs:
           # local build without that plugin is no proof of what Pages emits.
           test "$(grep -oE '<img[^>]+src="[^"]*assets/images/' _site/demo.html | wc -l)" -ge 3
 
+      # The badges are drawn in the browser, over the two plain links a page
+      # carries — a plugin's Installation section writes nothing else, since
+      # Markdown Weblate rewrites can hold no Liquid and no version number. So
+      # what is checked here is that the page went out with the URLs, and that
+      # the demo still carries a list for them to replace. Every expected value
+      # is read back from _config.yml, the file that produced it.
+      - name: Check the in-page download badges are wired
+        run: |
+          version=$(sed -nE 's/^[[:space:]]+version:[[:space:]]*"([^"]+)".*/\1/p' _config.yml | head -n1)
+          release=$(sed -nE 's|^[[:space:]]+release_url:[[:space:]]*([^[:space:]]+).*|\1|p' _config.yml | head -n1)
+          nightly=$(sed -nE 's|^[[:space:]]+nightly_url:[[:space:]]*([^[:space:]]+).*|\1|p' _config.yml | head -n1)
+          test -n "$version"
+          test -n "$release"
+          test -n "$nightly"
+          grep -q '\.download-badge' _site/assets/css/style.css
+          for page in demo.html fr/demo.html; do
+            # The number is in the badge URL, and it came from _config.yml: the
+            # badge reads the same in every language, which is the whole point.
+            grep -q "static/v1?[^\"]*label=${version}&message=" "_site/$page"
+            grep -q "static/v1?[^\"]*label=nightly&message=" "_site/$page"
+            # And the list to replace: the hrefs have to be the derived ones, or
+            # the page keeps its bullets and nobody notices.
+            grep -q "href=\"${release}\"" "_site/$page"
+            grep -q "href=\"${nightly}\"" "_site/$page"
+          done
+          # The old hand-written form, which named a version inside a page.
+          ! grep -rq 'img.shields.io/badge/' _site --include='*.html'
+
       - name: Check the language picker links the translated page
         run: |
           grep -q 'details class="langpicker"' _site/demo.html

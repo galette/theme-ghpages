@@ -107,6 +107,38 @@ anything. `compver` is a *generation*, not an open floor:
 than the running Galette's `GALETTE_COMPAT_VERSION`, and imposes no upper bound.
 
 
+### The download badges
+
+A plugin's Installation section writes two plain links, one to the release and one
+to the nightly:
+
+```markdown
+* [Get latest Fullcard plugin!](https://github.com/galette-plugins/plugin-fullcard/releases/latest)
+* [Get Fullcard plugin nightly build!](https://github.com/galette-plugins/plugin-fullcard/releases/tag/nightly)
+```
+
+They come out as the badges galette.eu puts in a release post: the version on the
+left, the plugin's name in orange on the right, the PHP logo. Nothing is written
+in the Markdown to ask for it, for the same reason as the admonitions and the
+image viewer — a page Weblate rewrites can hold no Liquid tag — and for one more:
+a badge written by hand carries the version inside its URL, which is exactly the
+number that must never appear in a page.
+
+So the whole thing is derived here, from `_includes/download-urls.html`, which is
+also what the cartouche in the header uses. The two badge URLs are built on
+shields.io's `static/v1` endpoint, and the version comes from `releases/latest`
+like everywhere else: **a release bumps nothing, in no language**. The badge reads
+the same in every language, since a version number and a plugin's name are not
+words — the only strings involved are the image's `alt` and the figure's label,
+taken from `t_nav_download` and `t_latest`, which the theme already has.
+
+A list is replaced only when it is *nothing but* download links: every item one
+link, no other words, each pointing at a derived URL (or, for a page written by
+hand, at `releases/latest` and `releases/tag/nightly`). Anything else keeps its
+bullets — a paragraph that merely mentions the release is prose, not a button.
+Without JavaScript the two links stay exactly as written and still work, and the
+cartouche in the header offers the download either way.
+
 ### Admonitions
 
 Write one as a blockquote whose first word is bold:
@@ -135,8 +167,6 @@ cannot be written in CSS, since `:first-child` counts elements and ignores text
 nodes, so `:has(> p > strong:first-child)` would box any quotation with bold text
 in the middle of it.
 
-`alert.html` is still there, and still centres its content under a title, for a
-page no translator touches.
 
 ### Opening an image
 

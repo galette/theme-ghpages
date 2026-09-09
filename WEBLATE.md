@@ -216,8 +216,9 @@ File format parameters, both components:
 **Do not put the theme's admonitions in a page Weblate writes.** Measured on
 maps, twice:
 
-* `{% include alert.html type="warning" content="…" %}` becomes one unit carrying
-  the whole Liquid tag. Weblate re-wraps the file at `line_max_length`, an
+* `{% include alert.html type="warning" content="…" %}` — the include this cost
+  us, and which no longer exists — becomes one unit carrying the whole Liquid
+  tag. Weblate re-wraps the file at `line_max_length`, an
   include tag has to hold a single line, and the Pages build then fails on
   **every** language file — the untranslated ones too, since the English source
   is re-wrapped as well. French had also closed `content="` with a guillemet.

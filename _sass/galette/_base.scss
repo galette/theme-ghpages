@@ -173,13 +173,31 @@ section#content pre {
     }
 }
 
-/** Download badges, as used on galette.eu */
+/** Download badges, as used on galette.eu. Drawn by scripts.html over the two
+    plain links a page carries, so nothing keys on a class the page had to write.
+    Not aside#galette: that one is cut for the header — auto inline start margin,
+    350px cap past $galette-large — and does not sit in a column of prose. */
 .download-badge {
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6em;
+    align-items: center;
+    justify-content: center;
+    /* The shorthand is also what overrides the 1em 40px a figure gets from the
+       user agent. */
     margin: 1.5em auto;
 
     a:hover {
         text-decoration: none;
+    }
+
+    /* 28px is the natural height of style=for-the-badge; the cap is for a
+       viewport narrower than a badge. Wrapping puts them in a column under
+       $galette-small without a media query, and follows the reading direction. */
+    img {
+        height: 28px;
+        width: auto;
+        max-width: 100%;
     }
 }
 

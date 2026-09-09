@@ -299,4 +299,108 @@
       }
     });
   })();
+
+  {%- comment -%}
+  The two download links a plugin's Installation section carries — one to the
+  release, one to the nightly — shown as the badge galette.eu puts in a release
+  post.
+
+  Built here and not in the page, because the page is Markdown that Weblate
+  rewrites: a Liquid tag there fails the build of every language the day a
+  translation breaks it, and a version number written into it becomes a string
+  each language has to carry and bump at every release. So the page keeps its two
+  plain bullets — which is also exactly what a reader without JavaScript keeps,
+  the cartouche in the header being untouched either way.
+
+  static/v1 rather than the historical /badge/<label>-<message>-<color> path: the
+  same badge, but the parts travel in the query string, so url_encode is the whole
+  escaping story. The path form wants `-` doubled and `_` doubled, and would
+  mangle a tag such as 1.1.1-rc1.
+
+  Nothing here adds a string to translate. `nightly` is the release tag, shown
+  untranslated by the cartouche above as well, and the plugin's name is a proper
+  noun; the only words are the image's alt and the figure's label, both built from
+  strings the theme already has.
+  {%- endcomment -%}
+  {%- include download-urls.html -%}
+  {%- assign badge = 'https://img.shields.io/static/v1?color=ffb619&logo=php&logoColor=white&style=for-the-badge' -%}
+  {%- assign badge_name = dl_name | url_encode -%}
+  {%- assign shown_version = dl_version | default: t_latest -%}
+  {%- capture release_badge -%}{{ badge }}&label={{ shown_version | url_encode }}&message={{ badge_name }}{%- endcapture -%}
+  {%- capture nightly_badge -%}{{ badge }}&label=nightly&message={{ badge_name }}{%- endcapture -%}
+  (function () {
+    var content = document.getElementById('content');
+    if (!content) return;
+
+    /* An href as the DOM reports it — absolute, and without a trailing slash, so
+       that a link written with one still matches the derived URL. */
+    function key(href) {
+      var probe = document.createElement('a');
+      probe.href = href;
+      return probe.href.replace(/\/$/, '');
+    }
+
+    var badges = {}, count = 0;
+    function offer(href, src, alt) {
+      if (!href) return;
+      badges[key(href)] = { src: src, alt: alt };
+      count++;
+    }
+
+    {%- if release_url %}
+    offer({{ release_url | jsonify }},
+          {{ release_badge | jsonify }},
+          {{ dl_name | append: ' ' | append: shown_version | jsonify }});
+    {%- if site.github.releases_url %}
+    /* A page written by hand names the release page, not the asset inside it. */
+    offer({{ site.github.releases_url | append: '/latest' | jsonify }},
+          {{ release_badge | jsonify }},
+          {{ dl_name | append: ' ' | append: shown_version | jsonify }});
+    {%- endif %}
+    {%- endif %}
+    {%- if nightly_url %}
+    offer({{ nightly_url | jsonify }},
+          {{ nightly_badge | jsonify }},
+          {{ dl_name | append: ' nightly' | jsonify }});
+    {%- if site.github.releases_url %}
+    offer({{ site.github.releases_url | append: '/tag/nightly' | jsonify }},
+          {{ nightly_badge | jsonify }},
+          {{ dl_name | append: ' nightly' | jsonify }});
+    {%- endif %}
+    {%- endif %}
+    if (!count) return;
+
+    /* Only a list that is nothing but download links, so a bullet list that
+       merely mentions the release keeps its prose. Each item has to be one link
+       and no other words: `[Get the plugin](…) (recommended)` is a sentence. */
+    var lists = content.querySelectorAll('ul');
+    for (var i = 0; i < lists.length; i++) {
+      var list = lists[i], items = [], whole = list.children.length > 0;
+      for (var j = 0; j < list.children.length && whole; j++) {
+        var item = list.children[j];
+        var link = item.children.length === 1 && item.children[0].nodeName === 'A'
+          ? item.children[0] : null;
+        var badge = link && item.textContent.trim() === link.textContent.trim()
+          ? badges[key(link.href)] : null;
+        if (badge) { items.push({ href: link.href, badge: badge }); } else { whole = false; }
+      }
+      if (!whole || !items.length) continue;
+
+      /* Whatever the list held, in the order it held it: a page offering the
+         nightly alone does not gain a stable badge it never linked. */
+      var figure = document.createElement('figure');
+      figure.className = 'download-badge';
+      figure.setAttribute('aria-label', {{ t_nav_download | default: 'Download' | jsonify }});
+      for (var n = 0; n < items.length; n++) {
+        var anchor = document.createElement('a');
+        anchor.href = items[n].href;
+        var img = document.createElement('img');
+        img.src = items[n].badge.src;
+        img.alt = items[n].badge.alt;
+        anchor.appendChild(img);
+        figure.appendChild(anchor);
+      }
+      list.parentNode.replaceChild(figure, list);
+    }
+  })();
 </script>

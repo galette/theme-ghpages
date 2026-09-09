@@ -34,10 +34,14 @@ justified alignment can be judged honestly.
 
 ## Download badges
 
-<div class="download-badge" markdown="1">
-[![Get the latest release](https://img.shields.io/badge/2.2.1-Fullcard-ffb619.svg?logo=php&logoColor=white&style=for-the-badge)](https://galette.eu/download/plugins/)
-[![Get the nightly build](https://img.shields.io/badge/nightly-Fullcard-ffb619.svg?logo=php&logoColor=white&style=for-the-badge)](https://galette.eu/download/plugins/)
-</div>
+<!-- Two plain links, which is all a plugin's Installation section writes: the
+     theme turns a list that is nothing but download links into the badges
+     galette.eu puts in a release post. The hrefs have to be plugin.release_url
+     and plugin.nightly_url from _config.yml for that to fire, and CI fails if
+     they drift apart. -->
+
+* [Get the latest release](https://galette.eu/download/galette-1.2.1.tar.bz2)
+* [Get the nightly build](https://galette.eu/download/galette-dev.tar.bz2)
 
 ## Code
 

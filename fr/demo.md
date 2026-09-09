@@ -36,10 +36,8 @@ justification.
 
 ## Badges de téléchargement
 
-<div class="download-badge" markdown="1">
-[![Obtenir la dernière version](https://img.shields.io/badge/2.2.1-Fullcard-ffb619.svg?logo=php&logoColor=white&style=for-the-badge)](https://galette.eu/download/plugins/)
-[![Obtenir la nightly](https://img.shields.io/badge/nightly-Fullcard-ffb619.svg?logo=php&logoColor=white&style=for-the-badge)](https://galette.eu/download/plugins/)
-</div>
+* [Obtenir la dernière version](https://galette.eu/download/galette-1.2.1.tar.bz2)
+* [Obtenir la nightly](https://galette.eu/download/galette-dev.tar.bz2)
 
 ## Code
 
