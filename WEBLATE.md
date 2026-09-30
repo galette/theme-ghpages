@@ -196,8 +196,10 @@ auto has two, `documentation` and `index`. Add the add-on later, when a third
 page or the first language directory exists, and it will pick the rest up.
 
 A hand-made component on such a site is created, but flagged at once: *No
-translations found for this component file mask* (`NoMaskMatches`). No add-on
-adds a language, so waiting does not clear it. Add one language — `POST
+translations found for this component file mask* (`NoMaskMatches`). The
+project's *Add missing languages* add-on (`weblate.consistency.languages`) fills
+the component with the project's languages, but on its own schedule, not at
+creation. To clear the alert at once, add one language — `POST
 …/translations/` with `{"language_code": "fr"}` — and Weblate writes
 `fr/index.md` from the base file — the English copy described under
 [Recovering the old catalogues](#recovering-the-old-catalogues-without-recording-english) — and opens a
