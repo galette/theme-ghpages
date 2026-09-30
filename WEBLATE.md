@@ -195,6 +195,15 @@ and no component is ever created. Create one component per page by hand instead;
 auto has two, `documentation` and `index`. Add the add-on later, when a third
 page or the first language directory exists, and it will pick the rest up.
 
+A hand-made component on such a site is created, but flagged at once: *No
+translations found for this component file mask* (`NoMaskMatches`). No add-on
+adds a language, so waiting does not clear it. Add one language — `POST
+…/translations/` with `{"language_code": "fr"}` — and Weblate writes
+`fr/index.md` from the base file — the English copy described under
+[Recovering the old catalogues](#recovering-the-old-catalogues-without-recording-english) — and opens a
+pull request with it. Its statistics can read zero for a few minutes afterwards;
+they catch up without a pull. Measured on stripe and legalnotices.
+
 **The one thing to watch**: a *two or three letter* directory holding a `.md`
 would be taken for a language — `doc/`, `img/`, `api/`, `css/` all fit the shape.
 `images/`, where the screenshots go, is too long to match, and that is the only
@@ -249,33 +258,34 @@ translated. Nothing here has to be marked read-only.
 
 ### The one trap that matters
 
-The Markdown format is **monolingual, and Weblate does not read translations back
-from the repository**. The documentation is explicit:
+The Markdown format is **monolingual, and Weblate does not read changes to
+translations back from the repository**. The documentation is explicit:
 
 > Unlike most other formats, the changes in the translation files will not be
 > imported to Weblate because it can not be done reliably. The source of truth
 > for the translations is Weblate not the translated file.
 
-So a translated `de/documentation.md` sitting in the branch counts for nothing:
-Weblate will consider German untranslated and, on its first write, replace the
-file with its own output. For `plugin-fullcard` that would discard the nine
-catalogues recovered from the Sphinx manual.
+It says *changes*, and that is the whole difference. **A translation already in
+the branch when the component is created is imported**: helloasso's French page,
+committed as `fr/index.md` before its component existed, came in with 35 of 37
+units translated. The other two read the same in both languages (`Galette
+HelloAsso`, `Installation`), and `same_edit` flagged them for review.
 
-The order this forces, when component discovery creates the components:
+What is ignored is a file that changes afterwards. A translated
+`de/documentation.md` committed, or edited, once the component exists counts for
+nothing: Weblate keeps its own units and, on its next write, replaces the file
+with its own output.
 
-1. **Create the discovery component.** It finds `*/index.md` and
-   `*/documentation.md` and creates one component per page — you do not create
-   them by hand, so there is no "upload first" option.
-2. **Expect Weblate to flatten the translated files.** Considering those
-   languages untranslated, its first write replaces each `<lang>/*.md` with its
-   own output, most likely through a pull request. This is not a loss: the
-   content stays in the branch history, so
-   `git show <commit>:de/documentation.md` gets any of them back.
-3. **Upload the translations, one file per language per component.** In each
-   component, per language, *Files → Upload translation*. An explicit upload goes
-   through the parser and does populate Weblate, unlike a repository change.
-4. **Weblate then opens a pull request** re-adding the files it now considers
-   translated.
+The order this forces:
+
+1. **Commit the translated pages first**, then create the component — or let
+   component discovery create them, since it only runs on what is already there.
+2. **Anything that arrives later goes through Weblate**: per component, per
+   language, *Files → Upload translation*. An explicit upload goes through the
+   parser and does populate Weblate, unlike a repository change.
+3. **If Weblate has already flattened a file**, nothing is lost: the content
+   stays in the branch history, so `git show <commit>:de/documentation.md` gets it
+   back for an upload.
 
 ### Let the component settle before writing to it
 
