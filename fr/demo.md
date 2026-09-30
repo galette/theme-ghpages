@@ -63,6 +63,14 @@ elle-même ne défile jamais latéralement — les entourer de
 
 </div>
 
+## Images
+
+Une traduction reprend les chemins d'images de la page anglaise : le thème les
+résout depuis la racine du site, un seul répertoire d'images sert donc toutes
+les langues.
+
+![Une capture de l'écran d'accueil de Galette](assets/images/screenshot_1.png)
+
 ## Filet horizontal
 
 ---

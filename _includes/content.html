@@ -1,0 +1,36 @@
+{%- comment -%}
+The page body, with the relative image paths of a translated page pointed at the
+site root.
+
+A translation lives in its language directory, and its Markdown is Weblate's copy
+of the English page, image paths included: `images/form.png` in fr/index.md
+resolves to /fr/images/form.png, which does not exist. The screenshots are shared
+by every language, so the path is resolved from the root instead — no copy of
+`images/` per language.
+
+On an English page jekyll-relative-links has already made the path absolute, and
+nothing needs doing. Only a plain relative `src` is touched: absolute, external,
+protocol-relative, `data:` and `../` paths are left as written. `path_lang` comes
+from i18n.html.
+{%- endcomment -%}
+{%- if path_lang -%}
+  {%- assign root = '/' | relative_url -%}
+  {%- assign chunks = content | split: ' src="' -%}
+  {%- capture localized -%}
+    {%- for chunk in chunks -%}
+      {%- if forloop.first -%}{{ chunk }}{%- continue -%}{%- endif -%}
+      {%- assign head1 = chunk | slice: 0, 1 -%}
+      {%- assign head3 = chunk | slice: 0, 3 -%}
+      {%- assign head5 = chunk | slice: 0, 5 -%}
+      {%- assign head6 = chunk | slice: 0, 6 -%}
+      {%- if head1 == '/' or head3 == '../' or head5 == 'http:' or head5 == 'data:' or head6 == 'https:' -%}
+        {{ ' src="' }}{{ chunk }}
+      {%- else -%}
+        {{ ' src="' }}{{ root }}{{ chunk }}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {{ localized }}
+{%- else -%}
+  {{ content }}
+{%- endif -%}
