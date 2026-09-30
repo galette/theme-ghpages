@@ -121,6 +121,14 @@ jobs:
           ! grep -oE 'blockquote:has\([^)]*\) *\{' _site/assets/css/style.css
           test "$(grep -o '<blockquote>' _site/demo.html | wc -l)" -ge 5
 
+      # A translation carries the English page's image paths, relative to a
+      # directory one level down: they must be resolved from the site root, or
+      # every screenshot of a translated page is a 404.
+      - name: Check translated pages load their images from the site root
+        run: |
+          grep -q '<img src="/assets/images/screenshot_1.png"' _site/fr/demo.html
+          ! grep -q '<img src="assets/' _site/fr/demo.html
+
       # Presence only: whether an image gets a button depends on its natural
       # size against the width it is given, which no static build can answer —
       # that is checked in a browser, see README.
