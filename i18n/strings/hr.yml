@@ -1,1 +1,30 @@
-{}
+t_nav_home: Početna
+t_nav_doc: Dokumentacija
+t_nav_download: Preuzimanje
+t_nav_source: Izvorni kod
+t_maint_core: Održava tim Galettea
+t_maint_community: Dodatak zajednice
+t_maint_core_footer: Ovaj dodatak razvija i održava tim Galettea.
+t_maint_community_footer: Ovaj dodatak razvija i održava član zajednice.
+t_contact: Kontakt
+t_code_license: Kod pod licencom GPLv3
+t_content_license: Sadržaj pod licencom CC BY-SA 4.0
+t_scroll_label: Sadržaj s pomicanjem
+t_menu: Izbornik
+t_menu_open: Otvori glavni izbornik
+t_menu_close: Zatvori glavni izbornik
+t_nav_tracker: Pogreške i značajke
+t_galette_website: Mrežno mjesto Galettea
+t_galette_doc: Dokumentacija Galettea
+t_latest: najnovije
+t_compat_galette: Kompatibilno s Galetteom %s
+t_compat_outdated: Ovaj dodatak nije kompatibilan s najnovijom verzijom Galettea
+  (%s).
+t_languages: Jezici
+t_adm_note: Napomena
+t_adm_warning: Upozorenje
+t_adm_todo: Za napraviti
+t_img_close: Zatvori sliku
+t_img_prev: Prethodna slika
+t_img_next: Sljedeća slika
+t_img_counter: Slika %s od %s
