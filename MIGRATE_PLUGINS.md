@@ -32,7 +32,7 @@ the theme was pushed at 05:21:43 and the three consuming sites were rebuilt at
   `_includes/galette-version.html`, refreshed daily from Galette's own latest
   release. So a plugin release updates the pill, and a *Galette* release flips it
   on every site at once — neither needs `min_galette` touched again.
-* **Languages are already known.** The theme carries the nineteen languages
+* **Languages are already known.** The theme carries all languages
   Galette translates into, with their native names and text direction, and takes
   a page's language from its directory. A language Weblate adds on a translator's
   request needs no change in the plugin repository.

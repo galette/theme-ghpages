@@ -240,7 +240,7 @@ documentation: `index.md` and `documentation.md` by name, or an explicit `ref` o
 across languages all the same.
 
 The picker is a `<details>` disclosure: it shows the current language and folds
-the others away, which a flat list of nineteen could not do. Being native HTML
+the others away, which a flat list could not do. Being native HTML
 it opens with the keyboard and works with JavaScript disabled; the theme's script
 only adds dismissing it with Escape or a click elsewhere. It appears only when
 the page actually has a translation.
@@ -336,7 +336,7 @@ freeze the site on an old layout if left behind.
 
 ### Languages
 
-The theme knows the nineteen languages Galette translates into — the list shared
+The theme knows all languages Galette translates into — the list shared
 with the core, the manual and every plugin, at
 <https://hosted.weblate.org/projects/galette/>. `i18n/languages.yml` holds their
 codes, their autonyms (computed the way `Galette\Core\I18n` computes them) and
@@ -369,7 +369,7 @@ described in [WEBLATE.md](WEBLATE.md), including the token the cross-repository
 rebuild needs; moving a plugin onto the theme is
 [MIGRATE_PLUGINS.md](MIGRATE_PLUGINS.md).
 
-Ten languages have their own strings; the nine others render the English ones
+Eleven languages have their own strings; the nine others render the English ones
 until they are translated, while still declaring their own `lang` and text
 direction. A language absent from `languages.yml` falls back to English
 entirely.

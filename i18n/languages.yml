@@ -17,6 +17,7 @@ de:    {name: Deutsch}
 en:    {name: English}
 es:    {name: Español}
 fr:    {name: Français}
+hr:    {name: Hrvatski}
 it:    {name: Italiano}
 nb_NO: {name: Norsk Bokmål}
 # ICU has no autonym for Ottoman Turkish and falls back to a French string

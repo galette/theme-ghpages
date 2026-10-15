@@ -19,7 +19,7 @@ language, so a site needs no per-language `defaults` and a translation Weblate
 adds is picked up with no change to the plugin repository. An explicit page
 `lang` still wins.
 {%- endcomment -%}
-{%- assign known_langs = "ar,br,ca,de,en,es,fr,it,nb_NO,ota,oc,pt,pt_BR,ru,si,sl,ta,tr,uk" | split: ',' -%}
+{%- assign known_langs = "ar,br,ca,de,en,es,fr,hr,it,nb_NO,ota,oc,pt,pt_BR,ru,si,sl,ta,tr,uk" | split: ',' -%}
 {%- assign url_parts = page.url | remove_first: '/' | split: '/' -%}
 {%- comment -%}
 No need to check the depth: a page at the root has a file name as its first
@@ -248,6 +248,36 @@ need the BCP 47 form (pt-BR), or the markup is invalid.
   {%- assign t_img_prev = "Image précédente" -%}
   {%- assign t_img_next = "Image suivante" -%}
   {%- assign t_img_counter = "Image %s de %s" -%}
+{%- when 'hr' -%}
+  {%- assign t_nav_home = "Početna" -%}
+  {%- assign t_nav_doc = "Dokumentacija" -%}
+  {%- assign t_nav_download = "Preuzimanje" -%}
+  {%- assign t_nav_source = "Izvorni kod" -%}
+  {%- assign t_maint_core = "Održava tim Galettea" -%}
+  {%- assign t_maint_community = "Dodatak zajednice" -%}
+  {%- assign t_maint_core_footer = "Ovaj dodatak razvija i održava tim Galettea." -%}
+  {%- assign t_maint_community_footer = "Ovaj dodatak razvija i održava član zajednice." -%}
+  {%- assign t_contact = "Kontakt" -%}
+  {%- assign t_code_license = "Kod pod licencom GPLv3" -%}
+  {%- assign t_content_license = "Sadržaj pod licencom CC BY-SA 4.0" -%}
+  {%- assign t_scroll_label = "Sadržaj s pomicanjem" -%}
+  {%- assign t_menu = "Izbornik" -%}
+  {%- assign t_menu_open = "Otvori glavni izbornik" -%}
+  {%- assign t_menu_close = "Zatvori glavni izbornik" -%}
+  {%- assign t_nav_tracker = "Pogreške i značajke" -%}
+  {%- assign t_galette_website = "Mrežno mjesto Galettea" -%}
+  {%- assign t_galette_doc = "Dokumentacija Galettea" -%}
+  {%- assign t_latest = "najnovije" -%}
+  {%- assign t_compat_galette = "Kompatibilno s Galetteom %s" -%}
+  {%- assign t_compat_outdated = "Ovaj dodatak nije kompatibilan s najnovijom verzijom Galettea (%s)." -%}
+  {%- assign t_languages = "Jezici" -%}
+  {%- assign t_adm_note = "Napomena" -%}
+  {%- assign t_adm_warning = "Upozorenje" -%}
+  {%- assign t_adm_todo = "Za napraviti" -%}
+  {%- assign t_img_close = "Zatvori sliku" -%}
+  {%- assign t_img_prev = "Prethodna slika" -%}
+  {%- assign t_img_next = "Sljedeća slika" -%}
+  {%- assign t_img_counter = "Slika %s od %s" -%}
 {%- when 'it' -%}
   {%- assign t_nav_home = "Home" -%}
   {%- assign t_nav_doc = "Documentazione" -%}

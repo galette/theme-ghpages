@@ -433,10 +433,14 @@ upgrade.
 
 ## 3. Adding a language
 
-Nothing to do in the theme: all nineteen languages Galette translates into are
-already declared in `i18n/languages.yml`, and a language with no catalogue simply
-renders the English strings while keeping its own `lang` attribute and text
-direction.
+A language new to Galette must be declared in `i18n/languages.yml` — its code,
+its autonym computed as the header of that file explains, and `rtl: true` when
+Galette lists it as right-to-left. Weblate creates `i18n/strings/<lang>.yml` but
+cannot touch that file, which stays outside the mask; until the entry exists the
+catalogue is ignored and the language is missing from the picker (Croatian,
+#19). The *Regenerate i18n* workflow rebuilds the includes once it lands on
+`main`. A declared language with no translated strings yet renders the English
+ones while keeping its own `lang` attribute and text direction.
 
 On the plugin site, add its `defaults` entry in `_config.yml` — `plugin-fullcard`
-already lists all nineteen — and Weblate can then create the page files itself.
+already lists the nineteen that existed before Croatian — and Weblate can then create the page files itself.
