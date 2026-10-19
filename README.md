@@ -242,8 +242,18 @@ across languages all the same.
 The picker is a `<details>` disclosure: it shows the current language and folds
 the others away, which a flat list could not do. Being native HTML
 it opens with the keyboard and works with JavaScript disabled; the theme's script
-only adds dismissing it with Escape or a click elsewhere. It appears only when
-the page actually has a translation.
+only adds dismissing it with Escape or a click elsewhere, and carrying the
+current `#anchor` over to the other language. It appears only when the page
+actually has a translation.
+
+**Anchors are the English ones in every language.** kramdown derives a heading's
+id from its text, so a translation would otherwise get anchors of its own, and a
+link to `#setup` would lead nowhere — or to the wrong section — in French. A
+translated page takes the ids of the English page, heading for heading, which
+holds because Weblate keeps the structure of the source. When the two disagree on
+the sequence of heading levels (a translation not yet rebased on a changed page),
+the page keeps its own ids rather than get wrong ones. Do not write `{#id}` on a
+heading: Weblate would hand it to translators.
 
 ### Wide content
 

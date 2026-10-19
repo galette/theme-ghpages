@@ -178,6 +178,17 @@ jobs:
           grep -q 'details class="langpicker"' _site/demo.html
           grep -q 'hreflang="fr"' _site/demo.html
 
+      # kramdown derives an id from the heading text, so each language had its
+      # own anchors. A translation takes the English page's, heading for heading:
+      # the French demo must end up with exactly the English list, and no
+      # leftover French id.
+      - name: Check translated headings carry the English anchors
+        run: |
+          ids() { grep -oE '<h[1-6] id="[^"]*"' "$1"; }
+          test "$(ids _site/demo.html | wc -l)" -ge 5
+          diff <(ids _site/demo.html) <(ids _site/fr/demo.html)
+          ! grep -q 'id="titres"' _site/fr/demo.html
+
       - name: Check right-to-left support is wired
         run: grep -q 'bg-rtl.png' _site/assets/css/style.css
 
