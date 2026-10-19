@@ -63,6 +63,14 @@ elle-même ne défile jamais latéralement — les entourer de
 
 </div>
 
+## Avertissements
+
+Une citation dont le premier mot est en gras devient un encadré, coloré selon ce
+mot.
+
+> **Avertissement** — Vérifiez la politique d'utilisation du fournisseur que
+> vous choisissez.
+
 ## Images
 
 Une traduction reprend les chemins d'images de la page anglaise : le thème les

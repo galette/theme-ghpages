@@ -12,6 +12,9 @@ On an English page jekyll-relative-links has already made the path absolute, and
 nothing needs doing. Only a plain relative `src` is touched: absolute, external,
 protocol-relative, `data:` and `../` paths are left as written. `path_lang` comes
 from i18n.html.
+
+A translated page also takes the anchors of the English page, see
+heading-ids.html.
 {%- endcomment -%}
 {%- if path_lang -%}
   {%- assign root = '/' | relative_url -%}
@@ -30,7 +33,7 @@ from i18n.html.
       {%- endif -%}
     {%- endfor -%}
   {%- endcapture -%}
-  {{ localized }}
+  {%- include heading-ids.html html=localized -%}
 {%- else -%}
   {{ content }}
 {%- endif -%}

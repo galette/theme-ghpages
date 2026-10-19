@@ -1,0 +1,87 @@
+{%- comment -%}
+Gives the headings of a translated page the anchors of the English page, and
+outputs the result. Usage: {% include heading-ids.html html=rendered_body %}
+
+kramdown derives a heading's id from its text, so every translation had anchors of
+its own: #setup in English, #configuration in French — where #configuration is
+also what the next heading gets in English. A link carried from one language to
+another, or a fragment kept by the language picker, landed on the wrong section
+or nowhere.
+
+The id cannot be written in the page: `## Setup {#setup}` would hand `{#setup}`
+to translators along with the heading, the same reason the front matter carries
+no identifier. But a Weblate translation is the English page with its strings
+replaced, so its headings come in the same order, at the same levels — the n-th
+heading of a translation is the n-th heading of the English page, and takes its
+id.
+
+That holds only while both files are in step. When the sequences of levels differ
+— a translation not yet rebased on a changed page, or one written by hand — the
+page keeps its own ids rather than get wrong ones.
+
+The English page is read through `markdownify`, because whether `content` still
+holds its Markdown or already holds its HTML depends on which page Jekyll renders
+first. kramdown passes rendered HTML blocks through untouched, so both forms give
+the same ids. `path_lang` and `known_langs` come from i18n.html.
+{%- endcomment -%}
+{%- assign hid_source = nil -%}
+{%- assign hid_default = site.default_lang | default: 'en' -%}
+{%- assign hid_siblings = site.pages | where: 'name', page.name -%}
+{%- for sibling in hid_siblings -%}
+  {%- include page-lang.html url=sibling.url -%}
+  {%- if derived_lang == hid_default and sibling.url != page.url -%}
+    {%- assign hid_source = sibling -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign hid_done = false -%}
+{%- if hid_source -%}
+  {%- comment -%}
+  A heading opens as `<hN id="`: split on `<h`, and a chunk starting with a level
+  digit followed by ` id="` is one. `<hr` and closing tags never match.
+  {%- endcomment -%}
+  {%- assign hid_src_chunks = hid_source.content | markdownify | split: '<h' -%}
+  {%- assign hid_src_levels = '' -%}
+  {%- assign hid_src_ids = '' -%}
+  {%- for chunk in hid_src_chunks -%}
+    {%- if forloop.first -%}{%- continue -%}{%- endif -%}
+    {%- assign hid_level = chunk | slice: 0, 1 -%}
+    {%- assign hid_attr = chunk | slice: 1, 5 -%}
+    {%- if '123456' contains hid_level and hid_attr == ' id="' -%}
+      {%- assign hid_id = chunk | split: '"' | slice: 1 | first -%}
+      {%- assign hid_src_levels = hid_src_levels | append: hid_level -%}
+      {%- assign hid_src_ids = hid_src_ids | append: hid_id | append: '|' -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign hid_chunks = include.html | split: '<h' -%}
+  {%- assign hid_levels = '' -%}
+  {%- for chunk in hid_chunks -%}
+    {%- if forloop.first -%}{%- continue -%}{%- endif -%}
+    {%- assign hid_level = chunk | slice: 0, 1 -%}
+    {%- assign hid_attr = chunk | slice: 1, 5 -%}
+    {%- if '123456' contains hid_level and hid_attr == ' id="' -%}
+      {%- assign hid_levels = hid_levels | append: hid_level -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if hid_levels != '' and hid_levels == hid_src_levels -%}
+    {%- assign hid_done = true -%}
+    {%- assign hid_ids = hid_src_ids | split: '|' -%}
+    {%- assign hid_n = 0 -%}
+    {%- for chunk in hid_chunks -%}
+      {%- if forloop.first -%}{{ chunk }}{%- continue -%}{%- endif -%}
+      {%- assign hid_level = chunk | slice: 0, 1 -%}
+      {%- assign hid_attr = chunk | slice: 1, 5 -%}
+      {%- if '123456' contains hid_level and hid_attr == ' id="' -%}
+        {%- assign hid_old = chunk | split: '"' | slice: 1 | first -%}
+        {%- capture hid_prefix -%}{{ hid_level }} id="{{ hid_old }}"{%- endcapture -%}
+        {{ '<h' }}{{ hid_level }} id="{{ hid_ids[hid_n] }}"{{ chunk | remove_first: hid_prefix }}
+        {%- assign hid_n = hid_n | plus: 1 -%}
+      {%- else -%}
+        {{ '<h' }}{{ chunk }}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+{%- unless hid_done -%}{{ include.html }}{%- endunless -%}

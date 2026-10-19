@@ -284,10 +284,17 @@
 
   /* The language picker is a <details>, so it already opens, closes and takes
      the keyboard on its own. This only adds what <details> does not do:
-     dismissing it with Escape or a click elsewhere. */
+     dismissing it with Escape or a click elsewhere — and keeping the section
+     being read, since a translation carries the English anchors (see
+     heading-ids.html). Read at click time: the fragment changes as the reader
+     follows links within the page. */
   (function () {
     var picker = document.querySelector('.langpicker');
     if (!picker) return;
+    picker.addEventListener('click', function (event) {
+      var link = event.target.closest('a[hreflang]');
+      if (link && location.hash) link.hash = location.hash;
+    });
     document.addEventListener('click', function (event) {
       if (picker.open && !picker.contains(event.target)) picker.open = false;
     });
