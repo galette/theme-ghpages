@@ -41,7 +41,7 @@ jobs:
     name: Ask Pages to rebuild each consuming site
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Rebuild every site built on this theme
         env:
