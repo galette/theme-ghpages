@@ -16,7 +16,7 @@ jobs:
     name: Build the demo site
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -192,7 +192,7 @@ jobs:
       - name: Check right-to-left support is wired
         run: grep -q 'bg-rtl.png' _site/assets/css/style.css
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: demo-site
           path: _site
